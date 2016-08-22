@@ -1,0 +1,88 @@
+﻿@using Microsoft.Ajax.Utilities
+@model Spotify.Models.SpotifyApiResponseViewModel
+
+
+
+@if (Model != null)
+{
+    <h1>Search Results</h1>
+
+    if (Model.SearchedArtist != null)
+    {
+        <div class="row">
+            @foreach (var artist in Model.SearchedArtist.Artists.Items.DistinctBy(x => x.Name))
+            {
+                <div class="col-lg-4">
+                    <div class="col-lg-4">
+                        @{
+                            var image = artist.Images != null ? artist.Images.Select(x => x.Url).FirstOrDefault() : "~/Content/spotify.png";
+                        }
+                        <img src="@image" style="height: 75px; width: 75px;"/>
+
+                    </div>
+                    <div class="col-lg-8">
+                        <a href="@artist.ExternalUrls.Spotify">
+                            <p>@artist.Name</p>
+                        </a>
+                    </div>
+
+                </div>
+            }
+        </div>
+        if (Model.RelatedArtists.Items != null)
+        {
+            <div class="row">
+                <h1>You may also like</h1>
+                @foreach (var related in Model.RelatedArtists.Items.DistinctBy(x => x.Name))
+                {
+                    <div class="col-lg-4">
+                        <div class="col-lg-4">
+                            @{
+                                var image = related.Images != null ? related.Images.Select(x => x.Url).FirstOrDefault() : "";
+                            }
+
+                            <img src="@image" style="height: 75px; width: 75px;"/>
+                        </div>
+                            <div class="col-lg-8">
+                                <a href="@related.Uri">
+                                    <p>@related.Name</p>
+                                </a>
+                            </div>
+                        </div>
+                }
+            </div>
+        }
+    }
+
+    if (Model.SearchedTrack != null)
+    {
+        <div class="row">
+            @foreach (var track in Model.SearchedTrack.Tracks.Items.DistinctBy(x => x.Uri))
+            {
+                <div class="col-lg-4">
+                    <div class="col-lg-4">
+                        @{
+                            var image = track.Album.Images != null ? track.Album.Images.Select(x => x.Url).FirstOrDefault() : "";
+                        }
+                        <img src="@image" style="height: 75px; width: 75px;"/>
+                    </div>
+                    <div class="col-lg-8"><span>Track:</span>
+                        <a href="@track.Uri">
+	                       <p>@track.Name</p>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+<br/>
+<div class="row">
+	<div class="col-lg-6 col-lg-offset-3 text-center">
+		<ul class="nav">
+			<li>
+				<button class="btn btn-spotify">@Html.ActionLink("Back to start", "Index", "Home",null,new {@class = "black"})</button>
+			</li>
+		</ul>
+	</div>
+</div>
